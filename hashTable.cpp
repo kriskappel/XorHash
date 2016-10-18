@@ -21,7 +21,8 @@ int main()
 	int tam= 500;
 	node *hashTable = createHash(tam);
 	string teste= "umaString";
-	//addToHash(teste);
+	node *newNode;
+	newNode=insertToHash(teste);
 
 }
 
@@ -33,9 +34,9 @@ node *createHash(int tam)
 	return aux;
 }
 
-node *addToHash(string content)
+node *insertToHash(string content)
 {
-	node *newNode=(node*)malloc(sizeof(node));
+	node *newNode; //=(node*)malloc(sizeof(node));
 	
 	newNode->c=content;
 	int key=hashFunction(content);
