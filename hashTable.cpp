@@ -6,11 +6,11 @@
 
 using namespace std;
 
-struct nod{
+struct n{
 	string c;
-	struct nod *prox;
+	struct n *prox;
 };
-typedef struct nod node;
+typedef struct n node;
 
 node *createHash(int tam);//Cria hash inicial
 void insertToHash(node *hash, string content, int colisao, int flag, int tam);//Insere na hash
@@ -31,6 +31,8 @@ int main()
 	string tag, content;
 	cin>>tag>>content;		
 	
+
+	//TODO Tratar string vazia
 	if(tag=="INSERT")
 	{
 		cout<<"insert"<<endl;		
@@ -75,6 +77,7 @@ void insertToHash(node *hash, string content, int colisao, int flag, int tam)
 	cout<<content<<endl;
 	int key, pos;
 	node *newNode;
+	//node *auxNode=(hash+pos);
 	newNode=new node;
 	if(newNode == NULL){
 		cout<<"nulo";
@@ -90,9 +93,12 @@ void insertToHash(node *hash, string content, int colisao, int flag, int tam)
 		key=stringXor(content); //retorna onde deve ser inserido na hash
 		pos= hash1(key, tam); //faz a função k mod m
 		//sem colisão, insere normal da hash
-		//if(hash[pos] == NULL)
-		//	hash[pos] = newNode;
-		//else{
+		if((hash+pos)->c.empty())
+			(hash + pos) = newNode;
+		//cout<<"POSICOES "<<(hash+pos)->c<<" "<<newNode<<endl;
+		
+			
+		else{
 			//ocorreu a colisão, tratara ela com o modo adequado
 			switch(colisao){
 				case 0:
@@ -104,7 +110,7 @@ void insertToHash(node *hash, string content, int colisao, int flag, int tam)
 				case 3:
 					insereHashDuplo(hash,newNode, key);
 			}
-		//}
+		}
 	}
 }
 
