@@ -19,6 +19,8 @@ void insereLinear(node *hash, node *novo, int key);
 void insereQuadratica(node *hash, node *novo, int key);
 void insereHashDuplo(node *hash, node *novo, int key);
 int stringXor(string content);//Calcula função xor
+int hash1(int key, int tam);
+int hash2(int key, int tam);
 
 int main()
 {
@@ -68,7 +70,7 @@ node *createHash(int tam)
 	return aux;
 }	
 
-void insertToHash(node *hash, string content, int colisao, int tam)
+void insertToHash(node *hash, string content, int colisao, int flag, int tam)
 {
 	cout<<content<<endl;
 	int key, pos;
@@ -86,23 +88,23 @@ void insertToHash(node *hash, string content, int colisao, int tam)
 		newNode->c=content;
 		//cout<<newNode->c<< "só pra ter certeza"<<endl;	
 		key=stringXor(content); //retorna onde deve ser inserido na hash
-		pos = key%tam; //faz a função k mod m
+		pos= hash1(key, tam); //faz a função k mod m
 		//sem colisão, insere normal da hash
-		if(hash[pos] == NULL)
-			hash[pos] = newNode;
-		else{
+		//if(hash[pos] == NULL)
+		//	hash[pos] = newNode;
+		//else{
 			//ocorreu a colisão, tratara ela com o modo adequado
 			switch(colisao){
 				case 0:
-				insereEncadeamento(hash,newNode, key);			
+					insereEncadeamento(hash,newNode, key);			
 				case 1:
-				insereLinear(hash,newNode, key);
+					insereLinear(hash,newNode, key);
 				case 2:
-				insereQuadratica(hash,newNode, key);
+					insereQuadratica(hash,newNode, key);
 				case 3:
-				insereHashDuplo(hash,newNode, key);
+					insereHashDuplo(hash,newNode, key);
 			}
-		}
+		//}
 	}
 }
 
@@ -117,4 +119,34 @@ int stringXor(string content)
     }
     cout<< h<<endl;
     return h;
+}
+
+void insereEncadeamento(node *hash, node *novo, int key)
+{
+	cout<<"Insere Encadeado";
+}
+
+void insereLinear(node *hash, node *novo, int key)
+{
+	cout<<"Insere Linear";
+}
+
+void insereQuadratica(node *hash, node *novo, int key)
+{
+	cout<<"Insere Quadratico";
+}
+
+void insereHashDuplo(node *hash, node *novo, int key)
+{
+	cout<<"Insere Hash Duplo";
+}
+
+int hash1(int key, int tam)
+{
+	return key % tam;
+}
+
+int hash2(int key, int tam)
+{
+	return  1 + (key % (tam-1)); 
 }
