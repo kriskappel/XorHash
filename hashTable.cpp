@@ -16,8 +16,8 @@ node *createHash(int tam);//Cria hash inicial
 bool insertToHash(node *hash, string content, int colisao, int flag, int tam);//Insere na hash
 bool getFromHash(node *hash, string content, int tam);//Busca na hash
 bool removeFromHash(node *hash, string content, int tam);//remove da hash
-void insereEncadeamento(node *hash, string content, int key);
-void insereLinear(node *hash, string content, int key);
+bool insereEncadeamento(node *hash, string content, int key, int op);
+void insereLinear(node *hash, string content, int key, int tam);
 void insereQuadratica(node *hash, string content, int key);
 void insereHashDuplo(node *hash, string content, int key);
 int stringXor(string content);//Calcula função xor
@@ -32,34 +32,42 @@ int main()
 	double fator;
 	node *hashTable = createHash(tam);
 	string tag, content;
-	cin>>tag>>content;		
+	cin>>tag>>content>>colisao;		
 	
-
 	//TODO Tratar string vazia
-	if(tag=="INSERT")
+	while(tag != "0")
 	{
-		cout<<"insert"<<endl;		
-		status=insertToHash(hashTable, content, colisao, flag, tam);
-		qtd++; //adiciona mais um na quantidade
-		if(qtd == 0)	
-			fator=0;	
-		else
+		if(tag=="INSERT")
 		{
-			fator = (double)qtd/tam; //calcula o fator de carga
-			if(fator >= 0.75)
-				flag=1; //ocorre o rehash
+			cout<<"insert"<<endl;		
+			status=insertToHash(hashTable, content, colisao, flag, tam);
+			qtd++; //adiciona mais um na quantidade
+			if(qtd == 0)	
+				fator=0;	
+			else
+			{
+				fator = (double)qtd/tam; //calcula o fator de carga
+				if(fator >= 0.75)
+					flag=1; //ocorre o rehash
+			}
 		}
+		else if(tag=="DELETE")
+		{
+			cout<<"delete"<<endl;
+			removeFromHash(hashTable, content, tam);
+		}
+		else if(tag=="GET")
+		{
+			cout<<"get"<<endl;
+			getFromHash(hashTable, content, tam);
+		}
+		else
+			cout<<"ERROR, UNDEFINED TAG"<<endl;
+
+		cout<<endl;
+		cin>>tag>>content;
 	}
-	else if(tag=="DELETE")
-		cout<<"delete"<<endl;
-	else if(tag=="GET")
-		cout<<"get"<<endl;
-
-	else
-		cout<<"ERROR, UNDEFINED TAG"<<endl;
-
-	cout<<content<<endl;
-	
+		
 	//string teste= "umaString";
 	//cout<<teste<<endl;
 	//node *nNode;
@@ -71,14 +79,16 @@ int main()
 node *createHash(int tam)
 {
 	node *aux;
-	aux=(node*)malloc(sizeof(node)*tam);
+	//aux=(node*)malloc(sizeof(node)*tam);
+	aux= new node[tam];
 	
 	return aux;
 }	
 
 bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 {
-	cout<<content<<endl;
+	cout<<"\n===INSERCAO===\n"<<"Conteudo: "<<content<<endl;
+	//cout<<content<<endl;
 	int key, pos;
 	//cout<<"content da hash->"<<(hash+pos)->c<<endl;	
 	//node *newNode;
@@ -86,64 +96,80 @@ bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 	//strcpy(newNode->c, content.c_str());
 	//newNode->c=content;//.copy(content, content.length(), 0);
 	//newNode->c=content;
-	cout<<"teste"<<endl;
 	key=stringXor(content); //retorna onde deve ser inserido na hash
 	pos= hash1(key, tam); //faz a função k mod m
-	node *auxNode=(hash+pos);
-	cout<<"POSICOES "<<(hash+pos)->c<<" "<<auxNode<<endl;
+	//node *auxNode=(hash+pos);
+	//cout<<"POSICOES "<<(hash+pos)->c<<" "<<auxNode<<endl;
 	//sem colisão, insere normal da hash
-	cout<<"teste"<<endl;
-	cout<<"content da hash->"<<auxNode->c<<endl;
-	cout<<"teste"<<endl;
-	if((hash + pos)->c.empty())
+	cout<<"Posicao: "<<pos<<"\nKey: "<<key<<endl;
+	if(hash[pos].c.empty())
 	{
-		cout<<"content da hash->"<<(hash+pos)->c<<endl;
-		(hash + pos)->c=content;
+		//cout<<"content da hash->"<<(hash+pos)->c<<endl;
+		hash[pos].c=content;
+		cout<<"Status: Concluido com sucesso"<<endl;
 	}
-	
-		
 	else
 	{
+		bool founded;
+		cout<<"Status: Colisao na Insercao"<<endl;
 		//ocorreu a colisão, tratara ela com o modo adequado
 		switch(colisao){
 			case 0:
-				insereEncadeamento(hash, content, key);			
+			{
+				founded=insereEncadeamento(hash, content, key, 0);		
+			}
 			case 1:
-				insereLinear(hash, content, key);
+			{
+				insereLinear(hash, content, key, tam);
+			}
 			case 2:
 				insereQuadratica(hash, content, key);
 			case 3:
 				insereHashDuplo(hash, content, key);
 		}
 	}
-	cout<<"POSICOES "<<(hash+pos)->c<<endl;
+	//cout<<"POSICOES "<<(hash+pos)->c<<endl;
 	return true;
 	//}
 }
 
 bool getFromHash(node *hash, string content, int tam)
 {
+	cout<<"\n===BUSCA===\n"<<"Conteudo: "<<content<<endl;
 	int key, pos;
 	key=stringXor(content); //retorna onde deve ser inserido na hash
 	pos= hash1(key, tam); //faz a função k mod m
+	cout<<"Posicao: "<<pos<<"\nKey: "<<key<<endl;
 	if ((hash+pos)->c==content)
+	{
+		cout<<"Status: Concluido com sucesso"<<endl;
 		return true;
+	}
 	else
+	{
+		cout<<"Status: Chave nao encontrada"<<endl;
 		return false;
+	}
 }
 
 bool removeFromHash(node *hash, string content, int tam)
 {
+	cout<<"\n===REMOCAO===\n"<<"Conteudo: "<<content<<endl;
 	int key, pos;
 	key=stringXor(content); //retorna onde deve ser inserido na hash
 	pos= hash1(key, tam); //faz a função k mod m
+	cout<<"Posicao: "<<pos<<"\nKey: "<<key<<endl;
 	if ((hash+pos)->c==content)
 	{
+		cout<<"Status: Concluido com sucesso"<<endl;
 		(hash+pos)->c.clear();
 		return true;
 	}
 	else
+	{
+		cout<<"Status: Erro na remocao"<<endl;
 		return false;
+	}
 }
 
 int stringXor(string content)
@@ -155,18 +181,45 @@ int stringXor(string content)
         h ^= content[i];
         //cout<< "iteração "<<i<<" "<<h<<endl;
     }
-    cout<< h<<endl;
+    //cout<< h<<endl;
     return h;
 }
 
-void insereEncadeamento(node *hash, string content, int key)
+bool insereEncadeamento(node *hash, string content, int key, int op)
 {
 	cout<<"Insere Encadeado";
+	node *auxPointer=(hash+key);
+	while(auxPointer->prox!=NULL)
+	{
+		if(auxPointer->prox->c==content)
+		{
+			if(op==2)
+			{
+				node *anterior=auxPointer->prox->prox;
+				node *proximo =auxPointer->prox;
+				free(proximo);
+			}
+			return true;
+		}
+		auxPointer=auxPointer->prox;
+		
+	}
+	return false;
 }
 
-void insereLinear(node *hash, string content, int key)
+void insereLinear(node *hash, string content, int key, int tam)
 {
 	cout<<"Insere Linear";
+	//int i;
+	for(int i=key; i<tam;i++)
+	{
+		if(hash[i].c.empty())
+		{
+			//KEEP IMPLEMENTING, NOT ENDED YET
+			//return 
+			//hash[i].c=content;
+		}
+	}
 }
 
 void insereQuadratica(node *hash, string content, int key)
@@ -187,4 +240,4 @@ int hash1(int key, int tam)
 int hash2(int key, int tam)
 {
 	return  1 + (key % (tam-1)); 
-}
+}	
