@@ -1,3 +1,6 @@
+//REMINDER:
+//do a -help
+
 #include <stdio.h>
 #include <string>
 #include <cstring>
@@ -23,8 +26,9 @@ void insereHashDuplo(node *hash, string content, int key);
 int stringXor(string content);//Calcula função xor
 int hash1(int key, int tam);//calcula h1(x)
 int hash2(int key, int tam);//calcula h2(x) no caso de double hashing
+int selectTreatment(char *argv)
 
-int main()
+int main(int argc, char *argv[])
 {
 	int tam= 500, qtd=0;
 	int colisao, flag=0;
@@ -32,8 +36,20 @@ int main()
 	double fator;
 	node *hashTable = createHash(tam);
 	string tag, content;
-	cin>>tag>>content>>colisao;		
-	
+	cin>>tag>>content>>colisao;
+	if(argc==1 || argc>2)
+	{
+		cout<<"\nPlease select just a valid colision treatment type :D\n";
+		return 0;
+	}
+	//for(int i=0; i<argc; i++)		
+	int colisao= selectTreatment(char *argv[1]);
+	if (colisao== -1)
+	{
+		cout<<"\nInvalid colision type detected :(\n";
+		return 0;
+	}
+
 	//TODO Tratar string vazia
 	while(tag != "0")
 	{
@@ -203,6 +219,13 @@ bool insereEncadeamento(node *hash, string content, int key, int op)
 		}
 		auxPointer=auxPointer->prox;
 		
+	}
+	if(op==0)
+	{
+		node newNode= new node;
+		newNode->c=content;
+		newNode->prox=NULL;
+		auxPointer->prox=newNode;
 	}
 	return false;
 }
