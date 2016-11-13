@@ -26,9 +26,9 @@ void insereHashDuplo(node *hash, string content, int key);
 int stringXor(string content);//Calcula função xor
 int hash1(int key, int tam);//calcula h1(x)
 int hash2(int key, int tam);//calcula h2(x) no caso de double hashing
-int selectTreatment(char *argv)
+int selectTreatment(char **argv);
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	int tam= 500, qtd=0;
 	int colisao, flag=0;
@@ -37,16 +37,19 @@ int main(int argc, char *argv[])
 	node *hashTable = createHash(tam);
 	string tag, content;
 	cin>>tag>>content>>colisao;
-	if(argc==1 || argc>2)
+	cout<<argc;
+	if(argc==0 || argc>2)
 	{
-		cout<<"\nPlease select just a valid colision treatment type :D\n";
+		cout<<"\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.";
 		return 0;
 	}
-	//for(int i=0; i<argc; i++)		
-	int colisao= selectTreatment(char *argv[1]);
+	//for(int i=0; i<argc; i++)
+	//string auxss=*argv[1];
+	cout<<*argv[1];		
+	colisao= selectTreatment(argv);
 	if (colisao== -1)
 	{
-		cout<<"\nInvalid colision type detected :(\n";
+		cout<<"\nInvalid colision type detected :(\n\n-help for more options and explanations.";
 		return 0;
 	}
 
@@ -222,7 +225,7 @@ bool insereEncadeamento(node *hash, string content, int key, int op)
 	}
 	if(op==0)
 	{
-		node newNode= new node;
+		node *newNode= new node;
 		newNode->c=content;
 		newNode->prox=NULL;
 		auxPointer->prox=newNode;
@@ -264,3 +267,18 @@ int hash2(int key, int tam)
 {
 	return  1 + (key % (tam-1)); 
 }	
+
+int selectTreatment(char **argv)
+{
+	if (!strcmp(argv[1], "encadeamento"))	
+		return 0;
+	else if (!strcmp(argv[1], "linear"))	
+		return 1;
+	else if (!strcmp(argv[1], "quadratico"))	
+		return 2;
+	else if (!strcmp(argv[1], "hash_duplo"))	
+		return 3;
+	else if (!strcmp(argv[1], "help"))	
+		cout<<
+
+}
