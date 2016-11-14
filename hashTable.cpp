@@ -36,23 +36,23 @@ int main(int argc, char **argv)
 	double fator;
 	node *hashTable = createHash(tam);
 	string tag, content;
-	cin>>tag>>content>>colisao;
-	cout<<argc;
-	if(argc==0 || argc>2)
+	cout<<argc<<endl;
+	if(argc==1 || argc>2)
 	{
 		cout<<"\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.";
 		return 0;
 	}
 	//for(int i=0; i<argc; i++)
 	//string auxss=*argv[1];
-	cout<<*argv[1];		
+			
 	colisao= selectTreatment(argv);
+
 	if (colisao== -1)
 	{
 		cout<<"\nInvalid colision type detected :(\n\n-help for more options and explanations.";
 		return 0;
 	}
-
+	cin>>tag>>content;
 	//TODO Tratar string vazia
 	while(tag != "0")
 	{
@@ -130,21 +130,21 @@ bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 	else
 	{
 		bool founded;
-		cout<<"Status: Colisao na Insercao"<<endl;
+		cout<<"Status: Colisao na insercao"<<endl;
 		//ocorreu a colisão, tratara ela com o modo adequado
 		switch(colisao){
 			case 0:
-			{
-				founded=insereEncadeamento(hash, content, key, 0);		
-			}
+				founded=insereEncadeamento(hash, content, key, 0);
+				break;		
 			case 1:
-			{
 				insereLinear(hash, content, key, tam);
-			}
+				break;
 			case 2:
 				insereQuadratica(hash, content, key);
+				break;
 			case 3:
 				insereHashDuplo(hash, content, key);
+				break;
 		}
 	}
 	//cout<<"POSICOES "<<(hash+pos)->c<<endl;
@@ -270,15 +270,30 @@ int hash2(int key, int tam)
 
 int selectTreatment(char **argv)
 {
-	if (!strcmp(argv[1], "encadeamento"))	
+	if (!strcmp(argv[1], "-encadeamento"))
+	{
+		cout<< "chaining selected"<<endl;
 		return 0;
-	else if (!strcmp(argv[1], "linear"))	
+	}
+	else if (!strcmp(argv[1], "-linear"))	
+	{
+		cout<< "linear selected"<<endl;
 		return 1;
-	else if (!strcmp(argv[1], "quadratico"))	
+	}
+	else if (!strcmp(argv[1], "-quadratico"))
+	{
+		cout<<"quadratic selected"<<endl;	
 		return 2;
-	else if (!strcmp(argv[1], "hash_duplo"))	
+	}
+	else if (!strcmp(argv[1], "-hash_duplo"))
+	{	
+		cout<<"double hashing selected"<<endl;
 		return 3;
-	else if (!strcmp(argv[1], "help"))	
-		cout<<
+	}
+	else if (!strcmp(argv[1], "-help"))
+	{	
+		cout<<"HELP"<<endl;
+		return -1;
+	}
 
 }
