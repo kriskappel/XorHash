@@ -1,6 +1,34 @@
 //REMINDER:
 //do a -help
 
+/*
+Eu comecei a fazer de um jeito o insereEncadeamento, eu tava querendo fazer um metodo que conforme
+a selecao de insert, get ou delete, ele faria nesse mesmo metodo tudo, so mudaria com o uso de ifs, agora eu 
+pensei e achei melhor fazermos um metodo pra cada um dos 3 pra cada tipo de tratamento de colisao, ou seja:
+ANTES: (fazia dentro dele todos as operaçoes de insert get e delete)
+Encadeamento 
+Linear
+Quadratica
+HashDuplo
+
+agora o q eu queria mudar
+DEPOIS: (divide em metodos)
+getEncadeamento 
+getLinear
+getQuadratica
+getHashDuplo
+insertEncadeamento 
+insertLinear
+insertQuadratica
+insertHashDuplo
+deleteEncadeamento 
+deleteLinear
+deleteQuadratica
+deleteHashDuplo
+
+O q acha?
+*/
+
 #include <stdio.h>
 #include <string>
 #include <cstring>
