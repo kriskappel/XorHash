@@ -36,20 +36,33 @@ int main(int argc, char **argv)
 	double fator;
 	node *hashTable = createHash(tam); 
 	string tag, content;
+<<<<<<< HEAD
 
 	//TESTA SE UM PARAMETRO FOI PASSADO.
 	//só a chamada do .out conta como um parametro e ele so pode passar um parametro adicional por vez,
 	//nao pode escolher dois tipos de metodo de tratamento de colisao, por exemplo.
+=======
+	cout<<argc<<endl;
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 	if(argc==1 || argc>2)
 	{
 		cout<<"\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.\n";
 		return 0;
 	}
+<<<<<<< HEAD
 	colisao= selectTreatment(argv);//chama o metodo que transforma o argv em um int colisao
 
 	//caso o metodo selectTreatment tenha invalidado a seleção ele retorna -1
 	//caso ele tenha entrado na opçao de ajuda ele precisa encerrar o programa pro usuario poder executar de novo
 	if (colisao == 4 || colisao == -1) 
+=======
+	//for(int i=0; i<argc; i++)
+	//string auxss=*argv[1];
+			
+	colisao= selectTreatment(argv);
+
+	if (colisao== -1)
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 	{
 		if (colisao== -1)
 		{
@@ -58,6 +71,7 @@ int main(int argc, char **argv)
 		}
 		return 0;
 	}
+<<<<<<< HEAD
 	
 	//Le a tag, referente ao tipo de operaçao, insert, get ou delete
 	//Le o conteudo que quer se por na hash
@@ -68,6 +82,9 @@ int main(int argc, char **argv)
 
 	//cout<<*argv[1];		
 
+=======
+	cin>>tag>>content;
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 	//TODO Tratar string vazia
 	while(tag != "0") // se a tag for 0 ele para a execução
 	{
@@ -148,29 +165,42 @@ bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 	else
 	{
 		bool founded;
-		cout<<"Status: Colisao na Insercao"<<endl;
+		cout<<"Status: Colisao na insercao"<<endl;
 		//ocorreu a colisão, tratara ela com o modo adequado
 		switch(colisao){
 			case 0:
+<<<<<<< HEAD
 			{
 				founded=insereEncadeamento(hash, content, key, 0);
 				break;		
 			}
+=======
+				founded=insereEncadeamento(hash, content, key, 0);
+				break;		
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 			case 1:
-			{
 				insereLinear(hash, content, key, tam);
 				break;
+<<<<<<< HEAD
 			}
+=======
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 			case 2:
 			{
 				insereQuadratica(hash, content, key);
 				break;
+<<<<<<< HEAD
 			}
+=======
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 			case 3:
 			{
 				insereHashDuplo(hash, content, key);
 				break;
+<<<<<<< HEAD
 			}
+=======
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 		}
 	}
 	//cout<<"POSICOES "<<(hash+pos)->c<<endl;
@@ -307,6 +337,7 @@ int hash2(int key, int tam)
 int selectTreatment(char **argv)
 //MÉTODO QUE SÓ RECEBE O ARGUMENTO E RETORNA O CODIGO
 {
+<<<<<<< HEAD
 	if (!strcmp(argv[1], "-encadeamento"))	
 		return 0;
 	else if (!strcmp(argv[1], "-linear"))	
@@ -331,4 +362,32 @@ int selectTreatment(char **argv)
 	}
 	else 
 		return -1;
+=======
+	if (!strcmp(argv[1], "-encadeamento"))
+	{
+		cout<< "chaining selected"<<endl;
+		return 0;
+	}
+	else if (!strcmp(argv[1], "-linear"))	
+	{
+		cout<< "linear selected"<<endl;
+		return 1;
+	}
+	else if (!strcmp(argv[1], "-quadratico"))
+	{
+		cout<<"quadratic selected"<<endl;	
+		return 2;
+	}
+	else if (!strcmp(argv[1], "-hash_duplo"))
+	{	
+		cout<<"double hashing selected"<<endl;
+		return 3;
+	}
+	else if (!strcmp(argv[1], "-help"))
+	{	
+		cout<<"HELP"<<endl;
+		return -1;
+	}
+
+>>>>>>> 71134faaa78d2a129e2449350444901a4f2b2ca7
 }
