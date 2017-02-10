@@ -30,36 +30,51 @@ int selectTreatment(char **argv);
 
 int main(int argc, char **argv)
 {
-	int tam= 500, qtd=0;
+	int tam= 500, qtd=0; //tamanho incial da hash = 500
 	int colisao, flag=0;
 	bool status;
 	double fator;
-	node *hashTable = createHash(tam);
+	node *hashTable = createHash(tam); 
 	string tag, content;
-	cin>>tag>>content>>colisao;
-	cout<<argc;
-	if(argc==0 || argc>2)
+
+	//TESTA SE UM PARAMETRO FOI PASSADO.
+	//só a chamada do .out conta como um parametro e ele so pode passar um parametro adicional por vez,
+	//nao pode escolher dois tipos de metodo de tratamento de colisao, por exemplo.
+	if(argc==1 || argc>2)
 	{
-		cout<<"\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.";
+		cout<<"\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.\n";
 		return 0;
 	}
-	//for(int i=0; i<argc; i++)
-	//string auxss=*argv[1];
-	cout<<*argv[1];		
-	colisao= selectTreatment(argv);
-	if (colisao== -1)
+	colisao= selectTreatment(argv);//chama o metodo que transforma o argv em um int colisao
+
+	//caso o metodo selectTreatment tenha invalidado a seleção ele retorna -1
+	//caso ele tenha entrado na opçao de ajuda ele precisa encerrar o programa pro usuario poder executar de novo
+	if (colisao == 4 || colisao == -1) 
 	{
-		cout<<"\nInvalid colision type detected :(\n\n-help for more options and explanations.";
+		if (colisao== -1)
+		{
+			cout<<"\nInvalid colision type detected :(\n\n-help for more options and explanations.\n";
+			
+		}
 		return 0;
 	}
+	
+	//Le a tag, referente ao tipo de operaçao, insert, get ou delete
+	//Le o conteudo que quer se por na hash
+	cin>>tag>>content; 
+
+	
+	//cout<<argc;
+
+	//cout<<*argv[1];		
 
 	//TODO Tratar string vazia
-	while(tag != "0")
+	while(tag != "0") // se a tag for 0 ele para a execução
 	{
-		if(tag=="INSERT")
+		if(tag=="INSERT") 
 		{
-			cout<<"insert"<<endl;		
-			status=insertToHash(hashTable, content, colisao, flag, tam);
+			cout<<"insert"<<endl;//só pra fins de teste		
+			status=insertToHash(hashTable, content, colisao, flag, tam);//chama a funcao de inserção
 			qtd++; //adiciona mais um na quantidade
 			if(qtd == 0)	
 				fator=0;	
@@ -84,7 +99,7 @@ int main(int argc, char **argv)
 			cout<<"ERROR, UNDEFINED TAG"<<endl;
 
 		cout<<endl;
-		cin>>tag>>content;
+		cin>>tag>>content;// le de novo as novas informações
 	}
 		
 	//string teste= "umaString";
@@ -92,6 +107,7 @@ int main(int argc, char **argv)
 	//node *nNode;
 	//insertToHash(teste);
 	//cout<<"string"<<endl;
+	return 0;
 
 }
 
@@ -121,6 +137,8 @@ bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 	//cout<<"POSICOES "<<(hash+pos)->c<<" "<<auxNode<<endl;
 	//sem colisão, insere normal da hash
 	cout<<"Posicao: "<<pos<<"\nKey: "<<key<<endl;
+
+	//caso a hash esteja vazia ele só poe na posição e abraços
 	if(hash[pos].c.empty())
 	{
 		//cout<<"content da hash->"<<(hash+pos)->c<<endl;
@@ -135,16 +153,24 @@ bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 		switch(colisao){
 			case 0:
 			{
-				founded=insereEncadeamento(hash, content, key, 0);		
+				founded=insereEncadeamento(hash, content, key, 0);
+				break;		
 			}
 			case 1:
 			{
 				insereLinear(hash, content, key, tam);
+				break;
 			}
 			case 2:
+			{
 				insereQuadratica(hash, content, key);
+				break;
+			}
 			case 3:
+			{
 				insereHashDuplo(hash, content, key);
+				break;
+			}
 		}
 	}
 	//cout<<"POSICOES "<<(hash+pos)->c<<endl;
@@ -154,6 +180,7 @@ bool insertToHash(node *hash, string content, int colisao, int flag, int tam)
 
 bool getFromHash(node *hash, string content, int tam)
 {
+	//SÓ PESQUISA NA HASH E RETORNA SE ACHOU OU NÃO (até o momento)
 	cout<<"\n===BUSCA===\n"<<"Conteudo: "<<content<<endl;
 	int key, pos;
 	key=stringXor(content); //retorna onde deve ser inserido na hash
@@ -173,6 +200,7 @@ bool getFromHash(node *hash, string content, int tam)
 
 bool removeFromHash(node *hash, string content, int tam)
 {
+	//SÓ REMOVE DA HASH NORMALMENTE (até o momento)
 	cout<<"\n===REMOCAO===\n"<<"Conteudo: "<<content<<endl;
 	int key, pos;
 	key=stringXor(content); //retorna onde deve ser inserido na hash
@@ -193,6 +221,7 @@ bool removeFromHash(node *hash, string content, int tam)
 
 int stringXor(string content)
 {
+	//Recebe a string e retorna a key formada por ela
     unsigned h = 0;
 
     for (int i = 0; i < content.length(); i++)
@@ -206,14 +235,20 @@ int stringXor(string content)
 
 bool insereEncadeamento(node *hash, string content, int key, int op)
 {
+	//sei que o nome tava como insere, mas ele deveria fazer as 3 funçoes
+	//cada numero do op significa uma operação
+	//op=0 seria insere
+	//op=1 seria get
+	//op=2 seria delete
 	cout<<"Insere Encadeado";
 	node *auxPointer=(hash+key);
-	while(auxPointer->prox!=NULL)
+	while(auxPointer->prox!=NULL)//while pra ir até o final da lista encadeada
 	{
-		if(auxPointer->prox->c==content)
+		if(auxPointer->prox->c==content)//if caso ache o nodo com o conteudo que quero
 		{
 			if(op==2)
 			{
+				//vai até o local da lista com o conteudo desejado e apaga
 				node *anterior=auxPointer->prox->prox;
 				node *proximo =auxPointer->prox;
 				free(proximo);
@@ -225,6 +260,7 @@ bool insereEncadeamento(node *hash, string content, int key, int op)
 	}
 	if(op==0)
 	{
+		//no while ele ja foi até o final da lista, agora ele só adiciona na lista encadeada
 		node *newNode= new node;
 		newNode->c=content;
 		newNode->prox=NULL;
@@ -269,16 +305,30 @@ int hash2(int key, int tam)
 }	
 
 int selectTreatment(char **argv)
+//MÉTODO QUE SÓ RECEBE O ARGUMENTO E RETORNA O CODIGO
 {
-	if (!strcmp(argv[1], "encadeamento"))	
+	if (!strcmp(argv[1], "-encadeamento"))	
 		return 0;
-	else if (!strcmp(argv[1], "linear"))	
+	else if (!strcmp(argv[1], "-linear"))	
 		return 1;
-	else if (!strcmp(argv[1], "quadratico"))	
+	else if (!strcmp(argv[1], "-quadratico"))	
 		return 2;
-	else if (!strcmp(argv[1], "hash_duplo"))	
+	else if (!strcmp(argv[1], "-hash_duplo"))	
 		return 3;
-	else if (!strcmp(argv[1], "help"))	
-		cout<<
-
+	else if (!strcmp(argv[1], "-help"))
+	{	
+		cout<< " Hi :D \n This is a hash table and you have to select one out of 4 types of colision treatment in order to work properly!\n";
+		cout<< " This are the valid options and the way they work over it\n";
+		cout<< "-encadeamento:\n";
+		cout<< "\tsimple creates a linked list and adds the new key to the end of it\n";
+		cout<< "-linear:\n";
+		cout<< "\tin case of colisions the key increases in key + i\n";
+		cout<< "-quadratico\n";
+		cout<< "\tvery similar to linear probing but increases in i^2\n";
+		cout<< "-hash_duplo\n";
+		cout<< "\tthere's is a second hash that is used in case of colisions\n";
+		return 4;
+	}
+	else 
+		return -1;
 }
