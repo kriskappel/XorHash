@@ -205,7 +205,7 @@ bool getFromHash(node *hash, string content, int colisao, int tam) {
                 break;
             }
             case 3: {
-                foundedFlag=insertHashDuplo(hash, content, key, tam);
+                foundedFlag=getHashDuplo(hash, content, key, tam);
                 if (foundedFlag)
                     cout << "\nSUCCESS\n";
                 else
@@ -250,7 +250,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
                 break;
             }
             case 3: {
-                deleteHashDuplo(hash, content, key, tam);
+                deletedFlag=deleteHashDuplo(hash, content, key, tam);
                 if (deletedFlag)
                     cout << "\nSUCCESS\n";
                 else
