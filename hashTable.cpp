@@ -26,7 +26,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam);//remove d
 bool insertEncadeamento(node *hash, string content, int pos);
 bool getEncadeamento(node *hash, string content, int pos);
 bool deleteEncadeamento(node *hash, string content, int pos);
-void insereLinear(node *hash, string content, int pos, int tam);
+bool insertLinear(node *hash, string content, int key, int tam);
 void insereQuadratica(node *hash, string content, int pos);
 bool insertHashDuplo(node *hash, string content, int key, int tam);
 bool deleteHashDuplo(node *hash, string content, int key, int tam);
@@ -158,7 +158,11 @@ bool insertToHash(node *hash, string content, int colisao, int tam) {
                 break;
             }
             case 1: {
-                insereLinear(hash, content, pos, tam);
+                insertedFlag=insertLinear(hash, content, key, tam);
+                if (insertedFlag)
+                    cout << "\nSUCCESS\n";
+                else
+                    cout << "\nFAIL\n";
                 break;
             }
             case 2: {
@@ -203,7 +207,7 @@ bool getFromHash(node *hash, string content, int colisao, int tam) {
                 break;
             }
             case 1: {
-                insereLinear(hash, content, pos, tam);
+                insertLinear(hash, content, key, tam);
                 break;
             }
             case 2: {
@@ -248,7 +252,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
                 break;
             }
             case 1: {
-                insereLinear(hash, content, pos, tam);
+                insertLinear(hash, content, key, tam);
                 break;
             }
             case 2: {
@@ -353,16 +357,29 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
     return false;
 }
 
-void insereLinear(node *hash, string content, int pos, int tam) {
+bool insertLinear(node *hash, string content, int key, int tam) {
     cout << "Insere Linear";
-    //int i;
-    for (int i = pos; i < tam; i++) {
-        if (hash[i].c.empty()) {
-            //KEEP IMPLEMENTING, NOT ENDED YET
-            //return
-            //hash[i].c=content;
+    int pos;
+
+    for (int i = 0; i < tam; i++) 
+    {
+    	pos=hash1(key, tam);
+        if (hash[pos].c.empty()) 
+        {
+            hash[pos].c = content;
+            hash[pos].deleted=false;
+            return true;
+        }
+        else if(hash[pos].c == content)
+        {
+        	return false;
         }
     }
+}
+
+bool getLinear(node *hash, string content, int key, int tam)
+{
+	
 }
 
 void insereQuadratica(node *hash, string content, int pos) {
