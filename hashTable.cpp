@@ -134,11 +134,17 @@ bool insertToHash(node *hash, string content, int colisao, int tam) {
     cout << "Posicao: " << pos << "\nKey: " << key << endl;
 
     //caso a hash esteja vazia ele só poe na posição e abraços
-    if (hash[pos].c.empty()) {
+    if (hash[pos].c.empty()) 
+    {
         //cout<<"content da hash->"<<(hash+pos)->c<<endl;
         hash[pos].c = content;
         cout << "Status: Concluido com sucesso" << endl;
-    } else {
+    } 
+    else if (hash[pos].c==content)
+    {
+    	cout << "Status: Valor ja inserido" << endl;
+    }
+    else {
         bool insertedFlag;
         cout << "Status: Colisao na Insercao" << endl;
         //ocorreu a colisão, tratara ela com o modo adequado
@@ -226,7 +232,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     cout << "Posicao: " << pos << "\nKey: " << key << endl;
 
     //se
-    if ((hash + pos)->c == content && auxPointer->prox==NULL) {
+    if ((hash + pos)->c == content && (hash + pos)->prox==NULL) {
         cout << "Status: Concluido com sucesso" << endl;
         (hash + pos)->c.clear();
         return true;
