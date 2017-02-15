@@ -226,7 +226,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     cout << "Posicao: " << pos << "\nKey: " << key << endl;
 
     //se
-    if ((hash + pos)->c == content) {
+    if ((hash + pos)->c == content && auxPointer->prox==NULL) {
         cout << "Status: Concluido com sucesso" << endl;
         (hash + pos)->c.clear();
         return true;
@@ -317,14 +317,27 @@ bool getEncadeamento(node *hash, string content, int pos) {
 
 bool deleteEncadeamento(node *hash, string content, int pos) {
     node *auxPointer = (hash + pos);
-    while (auxPointer->prox != NULL)//while pra ir até o final da lista encadeada
+    if(auxPointer->c == content) //Se a primeira posição é a ser deletada ele só atualiza o valor e deleta o prox
+    {
+    	node *toBeDeleted =auxPointer->prox;
+
+    	auxPointer->c = auxPointer->prox->c;
+    	auxPointer->prox = auxPointer->prox->prox;
+    	free(toBeDeleted);
+
+    	return true;
+    }
+    while (auxPointer==NULL)//while pra ir até o final da lista encadeada
     {
         if (auxPointer->prox->c == content)//if caso ache o nodo com o conteudo que quero
         {
             //vai até o local da lista com o conteudo desejado e apaga
-            node *anterior = auxPointer->prox->prox;
-            node *proximo = auxPointer->prox;
-            free(proximo);
+            //node *anterior = auxPointer->prox->prox;
+            //if(auxPointer->prox)
+           	node *toBeDeleted =auxPointer->prox;
+
+    		auxPointer->prox = auxPointer->prox->prox;
+    		free(toBeDeleted);
 
             return true;
         }
