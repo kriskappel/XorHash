@@ -23,7 +23,7 @@ node *createHash(int tam);//Cria hash inicial
 bool insertToHash(node *hash, string content, int colisao, int tam);//Insere na hash
 bool getFromHash(node *hash, string content, int colisao, int tam);//Busca na hash
 bool removeFromHash(node *hash, string content, int colisao, int tam);//remove da hash
-bool ReHash(node *hash, string content, int colisao, int tam);
+node *ReHash(node *hash, string content, int colisao, int tam);
 
 bool insertEncadeamento(node *hash, string content, int pos);
 bool getEncadeamento(node *hash, string content, int pos);
@@ -94,15 +94,15 @@ int main(int argc, char **argv) {
             cout << "INSERT" << endl;//só pra fins de teste
             status = insertToHash(hashTable, content, colisao, tam);//chama a funcao de inserção
             qtd++; //adiciona mais um na quantidade
-            if (qtd == 0)
-                fator = 0;
-            else {
-                fator = (double) qtd / tam; //calcula o fator de carga
-                if (fator >= 0.75){
-                    flag = 1; //ocorre o rehash //karine aqui para que essa flag?
-                    ReHash(hashTable, content, colisao, tam);
-                }
+        
+            fator = (double) qtd / tam; //calcula o fator de carga
+            if (fator >= 0.75)
+            {
+                //flag = 1; //ocorre o rehash //karine aqui para que essa flag?
+                hashTable=ReHash(hashTable, content, colisao, tam);
+                qtd=0;
             }
+        
         } else if (tag == "DELETE") {
             cout << "DELETE" << endl;
             removeFromHash(hashTable, content, colisao, tam);
@@ -156,7 +156,9 @@ bool insertToHash(node *hash, string content, int colisao, int tam) {
     {
         //cout<<"content da hash->"<<(hash+pos)->c<<endl;
         hash[pos].c = content;
+        hash[pos].deleted=false;
         cout << "Status: Concluido com sucesso" << endl;
+
     }
     else if (hash[pos].c==content)
     {
@@ -269,6 +271,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     if ((hash + pos)->c == content && (hash + pos)->prox==NULL) {
         cout << "Status: Concluido com sucesso" << endl;
         (hash + pos)->c.clear();
+        (hash + pos)->deleted=true;
         return true;
     } else {
         bool deletedFlag;
@@ -311,7 +314,37 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     }
 }
 
-bool ReHash(node *hash, string content, int colisao, int tam){
+node *ReHash(node *hash, string content, int colisao, int tam)
+{
+    tam=2*tam;
+    node *newHash=createHash(tam);
+    node *auxPointer=new node();
+
+    string transferedContent;
+    if(colisao > 0)
+    {
+        for(int i=0; i<tam; i++)
+        {
+            if(!hash[i].c.empty())
+                insertToHash(newHash, hash[i].c, colisao, tam);
+        }
+    }
+    else
+    {
+        for(int i=0; i<tam; i++)
+        {
+            if(!hash[i].c.empty())
+            {
+                insertToHash(newHash, hash[i].c, colisao, tam);
+                auxPointer= (hash + i);
+                while(auxPointer!=NULL)
+                {
+                    insertToHash(newHash, auxPointer->c, colisao, tam);
+                }
+            }
+        }
+    }
+    return newHash;
 }
 
 int stringXor(string content) {
@@ -401,29 +434,19 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
 bool insertLinear(node *hash, string content, int key, int tam) {
     cout << "Insere Linear";
     int pos;
-    pos=hash1(key, tam);
-    bool flag = true;
 
-    for (int i = pos; i < tam; i++)
+    for (int i = 0; i < tam; i++)
     {
-    	//pos=hash1(key, tam);
-        if (hash[i].c.empty())
+    	pos=hash1(key + i, tam);
+        if (hash[pos].c.empty())
         {
-            hash[i].c = content;
-            hash[i].deleted=false;
+            hash[pos].c = content;
+            hash[pos].deleted=false;
             return true;
         }
-        else if(hash[i].c == content)
+        else if(hash[pos].c == content)
         {
         	return false;
-        }
-        else if (i == tam-1)
-        {//para garantir que a hash pode ser "percorrida" do inicio
-            if(flag){
-                tam = pos;
-                i=0;
-                flag = false;
-            }
         }
 
     }
@@ -433,26 +456,16 @@ bool getLinear(node *hash, string content, int key, int tam)
 {
     cout << "get linear";
     int pos;
-    pos=hash1(key, tam);
-    bool flag = true;
 
-    for (int i = pos; i < tam; i++)
+    for (int i = 0; i < tam; i++)
     {
-    	//pos=hash1(key, tam);
-        if(hash[i].c == content)
+    	pos=hash1(key + i, tam);
+        if(hash[pos].c == content)
         {
         	return true;
         }
-        else if (hash[i].c.empty() && hash[i].deleted==false){
+        else if (hash[pos].c.empty() && hash[pos].deleted==false){
             return false;
-        }
-        else if (i == tam-1)
-        {//para garantir que a hash pode ser "percorrida" do inicio
-            if(flag){
-                tam = pos;
-                i=0;
-                flag = false;
-            }
         }
     }
 }
@@ -461,34 +474,25 @@ bool deleteLinear(node *hash, string content, int key, int tam)
 {
     cout << "delete linear";
     int pos;
-    pos=hash1(key, tam);
-    bool flag = true;
 
-    for (int i = pos; i < tam; i++)
+    for (int i = 0; i < tam; i++)
     {
-    	//pos=hash1(key, tam);
-        if(hash[i].c == content)
+    	pos=hash1(key + i, tam);
+        if(hash[pos].c == content)
         {
-            hash[i].c.clear();
-            hash[i].deleted=true;
+            hash[pos].c.clear();
+            hash[pos].deleted=true;
         	return true;
         }
-        else if (hash[i].c.empty() && hash[i].deleted==false){
+        else if (hash[pos].c.empty() && hash[pos].deleted==false){
             return false;
         }
-        else if (i == tam-1)
-        {//para garantir que a hash pode ser "percorrida" do inicio
-            if(flag){
-                tam = pos;
-                i=0;
-                flag = false;
-            }
-        }
+    
     }
 
 }
 
-bool insereQuadratica(node *hash, string content, int key, int tam) {
+bool insertQuadratica(node *hash, string content, int key, int tam) {
     //Verificar essa função
     cout << "Insere Quadratico";
     int pos = 0;
@@ -510,9 +514,39 @@ bool insereQuadratica(node *hash, string content, int key, int tam) {
 
 bool getQuadratica(node *hash, string content, int key, int tam){
     cout<<"get quadratica";
+    int pos;
+
+    for (int i = 0; i < tam; i++)
+    {
+        pos=hash1(key + i + i*i, tam);
+        if(hash[pos].c == content)
+        {
+            return true;
+        }
+        else if (hash[pos].c.empty() && hash[pos].deleted==false){
+            return false;
+        }
+    }
 }
 bool deleteQuadratica(node *hash, string content, int key, int tam){
     cout<<"get quadratica";
+
+    int pos;
+
+    for (int i = 0; i < tam; i++)
+    {
+        pos=hash1(key + i + i * i, tam);
+        if(hash[pos].c == content)
+        {
+            hash[pos].c.clear();
+            hash[pos].deleted=true;
+            return true;
+        }
+        else if (hash[pos].c.empty() && hash[pos].deleted==false){
+            return false;
+        }
+    
+    }
 }
 
 bool insertHashDuplo(node *hash, string content, int key, int tam) {
