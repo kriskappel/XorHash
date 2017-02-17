@@ -23,7 +23,7 @@ node *createHash(int tam);//Cria hash inicial
 bool insertToHash(node *hash, string content, int colisao, int tam);//Insere na hash
 bool getFromHash(node *hash, string content, int colisao, int tam);//Busca na hash
 bool removeFromHash(node *hash, string content, int colisao, int tam);//remove da hash
-node *ReHash(node *hash, string content, int colisao, int tam);
+node *ReHash(node *hash, string content, int colisao, int *tam);
 
 bool insertEncadeamento(node *hash, string content, int pos);
 bool getEncadeamento(node *hash, string content, int pos);
@@ -47,6 +47,7 @@ int hash2(int key, int tam);//calcula h2(x) no caso de double hashing
 int selectTreatment(char **argv);
 
 string checkString(string content);
+//void splitString(std::string entrada, std::string &tag, std::string &content);
 
 int main(int argc, char **argv) {
     int tam = 500, qtd = 0; //tamanho incial da hash = 500
@@ -54,11 +55,14 @@ int main(int argc, char **argv) {
     bool status;
     double fator;
     node *hashTable = createHash(tam);
-    string tag, content;
-
+    //string tag, content; //entrada;
+    char entradaTag[10], entradaContent[105];
     //TESTA SE UM PARAMETRO FOI PASSADO.
     //só a chamada do .out conta como um parametro e ele so pode passar um parametro adicional por vez,
     //nao pode escolher dois tipos de metodo de tratamento de colisao, por exemplo.
+    //out<<argc;
+
+    //cout<<*argv[1];
     if (argc == 1 || argc > 2) {
         cout << "\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.\n";
         return 0;
@@ -77,15 +81,27 @@ int main(int argc, char **argv) {
 
     //Le a tag, referente ao tipo de operaçao, insert, get ou delete
     //Le o conteudo que quer se por na hash
-	cin >> tag >> content;
-	content=checkString(content);
+	//cin >> tag >> content;
+
     //cout<<argc;
 
     //cout<<*argv[1];
 
     //TODO Tratar string vazia
-    while (tag != "0") // se a tag for 0 ele para a execução
+    while (scanf("%s %s", entradaTag, entradaContent)!=EOF)// se a tag for EOF ele para a execução
+    //while(cin >> tag >> content)
     {
+        string tag(entradaTag);
+        string content(entradaContent);
+        //cout<<"aqui2"<<endl;
+        //splitString(entrada, tag, content);
+        //cout<<tag<<content;
+        content=checkString(content);
+        if (content=="eita")
+        {
+            cout<<"\nERRO\n";
+            return 0;
+        }
         if (tag == "INSERT") {
             cout << "INSERT " << content << " ";//só pra fins de teste
 
@@ -105,7 +121,7 @@ int main(int argc, char **argv) {
             if (fator >= 0.75)
             {
                 //flag = 1; //ocorre o rehash //karine aqui para que essa flag?
-                hashTable=ReHash(hashTable, content, colisao, tam);
+                hashTable=ReHash(hashTable, content, colisao, &tam);
                 qtd=0;
             }
         
@@ -138,9 +154,11 @@ int main(int argc, char **argv) {
             cout << "ERROR, UNDEFINED TAG ";
 
         //Karine aqui: não entendi essa parte. Perguntar para o Kristofer
-        cout << endl;
-        cin >> tag >> content;// le de novo as novas informações
-        content=checkString(content);
+        //cout << endl;
+        //cin >> tag >> content;// le de novo as novas informações
+        //content=checkString(content);
+        //cout<<"aqui";
+        cout<<endl;
     }
 
     //string teste= "umaString";
@@ -316,36 +334,45 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     }
 }
 
-node *ReHash(node *hash, string content, int colisao, int tam)
+node *ReHash(node *hash, string content, int colisao, int *tam)
 {
-    tam=2*tam;
-    node *newHash=createHash(tam);
+    *tam=2 * (*tam);
+    node *newHash=createHash(*tam);
     node *auxPointer=new node();
 
     string transferedContent;
     if(colisao > 0)
     {
-        for(int i=0; i<tam; i++)
+        //cout<<"colisao mais q 0"<<endl;
+        for(int i=0; i< (*tam)/2; i++)
         {
             if(!hash[i].c.empty())
-                insertToHash(newHash, hash[i].c, colisao, tam);
+            {
+                cout << "INSERT " << content << " ";
+                //cout<<hash[i].c;
+                insertToHash(newHash, hash[i].c, colisao, *tam);
+            }
         }
     }
     else
     {
-        for(int i=0; i<tam; i++)
+        //cout<<"colisao 0"<<endl;
+        for(int i=0; i<*tam; i++)
         {
             if(!hash[i].c.empty())
             {
-                insertToHash(newHash, hash[i].c, colisao, tam);
+                insertToHash(newHash, hash[i].c, colisao, *tam);
                 auxPointer= (hash + i);
                 while(auxPointer!=NULL)
                 {
-                    insertToHash(newHash, auxPointer->c, colisao, tam);
+                    cout << "INSERT " << content << " ";
+                    insertToHash(newHash, auxPointer->c, colisao, *tam);
+                    auxPointer=auxPointer->prox;
                 }
             }
         }
     }
+   
     return newHash;
 }
 
@@ -358,7 +385,7 @@ int stringXor(string content) {
         //cout<< "iteração "<<i<<" "<<h<<endl;
     }
     //cout<< h<<endl;
-    return abs(h);
+    return h;
 }
 
 bool insertEncadeamento(node *hash, string content, int pos) {
@@ -393,7 +420,8 @@ bool insertEncadeamento(node *hash, string content, int pos) {
     auxPointer->prox = newNode;
 
     cout<< " "<< pos;
-    cout<< " "<<colisoes;
+    cout<< " "<< colisoes;
+    cout<<endl;
     return true;
 }
 
@@ -710,7 +738,30 @@ string checkString(string content)
 	{
   	  	cout<<"ERROR"<<endl;
     	cin>>content;
+        return "eita";
 	} 	
 	
 	return content;
 }
+
+/*void splitString(std::string entrada, std::string &tag, std::string &content) {
+    
+    std::string delims = "\"";
+    std::string results[2];
+    size_t lastOffset = 0;
+    int i = 0;
+
+    while(true)
+    {
+        size_t offset = entrada.find_first_of(delims, lastOffset);
+        results[i] = entrada.substr(lastOffset, offset - lastOffset);
+        i++;
+        if (offset == std::string::npos)
+            break;
+        else
+            lastOffset = offset + 1; // add one to skip the delimiter
+    }
+    
+    tag = results[0];
+    content = results[1];
+}*/
