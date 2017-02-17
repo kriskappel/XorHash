@@ -15,7 +15,7 @@ using namespace std;
 struct n {
     string c;
     struct n *prox;
-    bool deleted=false;
+    bool deleted;
 };
 typedef struct n node;
 
@@ -842,7 +842,7 @@ bool saidaArquivo(string c){
     {
         return false;
     }
-    result = fprinf(arq, c);
+    result = fprintf(arq, c.c_str());
     fclose(arq);
     if (result == EOF) //Se a função NÃO for executada com sucesso, fputs retorna a constante EOF.
         return false;
