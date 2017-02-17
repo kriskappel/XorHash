@@ -360,7 +360,7 @@ node *ReHash(node *hash, string content, int colisao, int *tam)
 {
     *tam=2 * (*tam);
     node *newHash=createHash(*tam);
-    node *auxPointer=new node();
+    node *linkeList=new node();
 
     string transferedContent;
     if(colisao > 0)
@@ -380,18 +380,18 @@ node *ReHash(node *hash, string content, int colisao, int *tam)
     else
     {
         //cout<<"colisao 0"<<endl;
-        for(int i=0; i<*tam; i++)
+        for(int i=0; i<(*tam)/2; i++)
         {
             if(!hash[i].c.empty())
             {
-                insertToHash(newHash, hash[i].c, colisao, *tam);
-                auxPointer= (hash + i);
+                //insertToHash(newHash, hash[i].c, colisao, *tam);
+                linkeList= (hash + i);
                 while(auxPointer!=NULL)
                 {
                     saidaArquivo("INSERT " + content + " ");
                     //cout << "INSERT " << content << " ";
-                    insertToHash(newHash, auxPointer->c, colisao, *tam);
-                    auxPointer=auxPointer->prox;
+                    insertToHash(newHash, linkeList->c, colisao, *tam);
+                    linkeList=linkeList->prox;
                 }
             }
         }
