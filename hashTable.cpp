@@ -45,6 +45,8 @@ int stringXor(string content);//Calcula função xor
 int hash1(int key, int tam);//calcula h1(x)
 int hash2(int key, int tam);//calcula h2(x) no caso de double hashing
 int selectTreatment(char **argv);
+bool CriaArquivo();
+bool saidaArquivo(string c);
 
 string checkString(string content);
 //void splitString(std::string entrada, std::string &tag, std::string &content);
@@ -63,6 +65,7 @@ int main(int argc, char **argv) {
     //out<<argc;
 
     //cout<<*argv[1];
+    bool CriaArquivo();
     if (argc == 1 || argc > 2) {
         cout << "\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.\n";
         return 0;
@@ -103,7 +106,8 @@ int main(int argc, char **argv) {
             return 0;
         }
         if (tag == "INSERT") {
-            cout << "INSERT " << content << " ";//só pra fins de teste
+            //cout << "INSERT " << content << " ";//só pra fins de teste
+            saidaArquivo("INSERT \""+content+"\" ");
 
             content.erase(content.begin());
 			content.erase(content.end()-1);
@@ -111,12 +115,14 @@ int main(int argc, char **argv) {
             status = insertToHash(hashTable, content, colisao, tam);//chama a funcao de inserção
 
             if (status)
-                cout << " SUCCESS";
+                saidaArquivo("SUCCESS\n");
+                //cout << " SUCCESS";
             else
-                cout << " FAIL";
+                saidaArquivo("FAIL\n");
+                //cout << " FAIL";
 
             qtd++; //adiciona mais um na quantidade
-        
+
             fator = (double) qtd / tam; //calcula o fator de carga
             if (fator >= 0.75)
             {
@@ -124,9 +130,10 @@ int main(int argc, char **argv) {
                 hashTable=ReHash(hashTable, content, colisao, &tam);
                 qtd=0;
             }
-        
+
         } else if (tag == "DELETE") {
-            cout << "DELETE " << content<< " ";
+            //cout << "DELETE " << content<< " ";
+            saidaArquivo("DELETE \""+content+"\" ");
 
             content.erase(content.begin());
 			content.erase(content.end()-1);
@@ -134,12 +141,15 @@ int main(int argc, char **argv) {
             status=removeFromHash(hashTable, content, colisao, tam);
 
             if (status)
-                cout << " SUCCESS";
+                saidaArquivo("SUCCESS\n");
+                //cout << " SUCCESS";
             else
-                cout << " FAIL";
+                saidaArquivo("FAIL\n");
+                //cout << " FAIL";
 
         } else if (tag == "GET") {
-            cout << "GET " << content << " ";
+            //cout << "GET " << content << " ";
+            saidaArquivo("GET \""+content+"\" ");
 
             content.erase(content.begin());
 			content.erase(content.end()-1);
@@ -147,9 +157,11 @@ int main(int argc, char **argv) {
             status=getFromHash(hashTable, content, colisao, tam);
 
             if (status)
-                cout << " SUCCESS";
+                saidaArquivo("SUCCESS\n");
+                //cout << " SUCCESS";
             else
-                cout << " FAIL";
+                saidaArquivo("FAIL\n");
+                //cout << " FAIL";
         } else
             cout << "ERROR, UNDEFINED TAG ";
 
@@ -189,9 +201,11 @@ bool insertToHash(node *hash, string content, int colisao, int tam) {
     //newNode->c=content;//.copy(content, content.length(), 0);
     //newNode->c=content;
     key = stringXor(content); //retorna onde deve ser inserido na hash
-    cout<<key;
+    saidaArquivo(key + " ");
+    //cout<<key;
     pos = hash1(key, tam); //faz a função k mod m
-    cout<< " "<<pos;
+    saidaArquivo(pos + " ");
+    //cout<< " "<<pos;
     //node *auxNode=(hash+pos);
     //cout<<"POSICOES "<<(hash+pos)->c<<" "<<auxNode<<endl;
     //sem colisão, insere normal da hash
@@ -203,13 +217,15 @@ bool insertToHash(node *hash, string content, int colisao, int tam) {
         //cout<<"content da hash->"<<(hash+pos)->c<<endl;
         hash[pos].c = content;
         hash[pos].deleted=false;
-        cout<< " "<<pos<< " 0";
+        saidaArquivo(pos + " 0 ");
+        //cout<< " "<<pos<< " 0";
         //cout << "Status: Concluido com sucesso" << endl;
 
     }
     else if (hash[pos].c==content)
     {
-    	cout<< " "<<pos<< " 0";
+        saidaArquivo(pos + " 0 ");
+    	//cout<< " "<<pos<< " 0";
     	return false;
     	//cout << "Status: Valor ja inserido" << endl;
     }
@@ -250,14 +266,17 @@ bool getFromHash(node *hash, string content, int colisao, int tam) {
     //cout << "\n===BUSCA===\n" << "Conteudo: " << content << endl;
     int key, pos;
     key = stringXor(content); //retorna onde deve ser inserido na hash
-    cout<<key;
+    saidaArquivo(key + " ");
+    //cout<<key;
     pos = hash1(key, tam); //faz a função k mod m
-    cout<< " "<<pos;
+    saidaArquivo(pos + " ");
+    //cout<< " "<<pos;
     //out << "Posicao: " << pos << "\nKey: " << key << endl;
     if ((hash + pos)->c == content) {
         //cout << "Status: Concluido com sucesso" << endl;
-        cout<< " "<<pos<< " 0";
-        
+        saidaArquivo(pos + " 0 ");
+        //cout<< " "<<pos<< " 0";
+
         return true;
     } else {
         bool foundedFlag;
@@ -293,15 +312,18 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     //cout << "\n===REMOCAO===\n" << "Conteudo: " << content << endl;
     int key, pos;
     key = stringXor(content); //retorna onde deve ser inserido na hash
-    cout<<key;
+    saidaArquivo(key + " ");
+    //cout<<key;
     pos = hash1(key, tam); //faz a função k mod m
-    cout<<" "<<pos;
+    saidaArquivo(pos + " ");
+    //cout<<" "<<pos;
     //cout << "Posicao: " << pos << "\nKey: " << key << endl;
 
     //se
     if ((hash + pos)->c == content && (hash + pos)->prox==NULL) {
         //cout << "Status: Concluido com sucesso" << endl;
-        cout<< " "<<pos<< " 0";
+        saidaArquivo(pos + " 0 ");
+        //cout<< " "<<pos<< " 0";
         (hash + pos)->c.clear();
         (hash + pos)->deleted=true;
         return true;
@@ -348,7 +370,8 @@ node *ReHash(node *hash, string content, int colisao, int *tam)
         {
             if(!hash[i].c.empty())
             {
-                cout << "INSERT " << content << " ";
+                saidaArquivo("INSERT " + content + " ");
+                //cout << "INSERT " << content << " ";
                 //cout<<hash[i].c;
                 insertToHash(newHash, hash[i].c, colisao, *tam);
             }
@@ -365,14 +388,15 @@ node *ReHash(node *hash, string content, int colisao, int *tam)
                 auxPointer= (hash + i);
                 while(auxPointer!=NULL)
                 {
-                    cout << "INSERT " << content << " ";
+                    saidaArquivo("INSERT " + content + " ");
+                    //cout << "INSERT " << content << " ";
                     insertToHash(newHash, auxPointer->c, colisao, *tam);
                     auxPointer=auxPointer->prox;
                 }
             }
         }
     }
-   
+
     return newHash;
 }
 
@@ -398,8 +422,10 @@ bool insertEncadeamento(node *hash, string content, int pos) {
     	colisoes++;
         if (auxPointer->c == content)
         {
-        	cout<< " "<< pos;
-        	cout<< " "<<colisoes;
+            saidaArquivo(pos + " ");
+            saidaArquivo(colisoes + " ");
+        	//cout<< " "<< pos;
+        	//cout<< " "<<colisoes;
             return false; //se ja achar o elemento na tabela retorna falso
         }
 
@@ -407,8 +433,10 @@ bool insertEncadeamento(node *hash, string content, int pos) {
     }
     if (auxPointer->c == content)
     {
-    	cout<< " "<< pos;
-    	cout<< " "<<colisoes;
+        saidaArquivo(pos + " ");
+        saidaArquivo(colisoes + " ");
+    	//cout<< " "<< pos;
+    	//cout<< " "<<colisoes;
         return false;
     }
 
@@ -419,9 +447,11 @@ bool insertEncadeamento(node *hash, string content, int pos) {
     newNode->prox = NULL;
     auxPointer->prox = newNode;
 
-    cout<< " "<< pos;
-    cout<< " "<< colisoes;
-    cout<<endl;
+    saidaArquivo(pos + " ");
+    saidaArquivo(colisoes + " ");
+    //cout<< " "<< pos;
+    //cout<< " "<< colisoes;
+    //cout<<endl;
     return true;
 }
 
@@ -431,8 +461,10 @@ bool getEncadeamento(node *hash, string content, int pos) {
 
     if(auxPointer->prox==NULL)
     {
-    	cout<< " "<< pos;
-        cout<< " "<<colisoes;
+        saidaArquivo(pos + " ");
+        saidaArquivo(colisoes + " ");
+    	//cout<< " "<< pos;
+        //cout<< " "<<colisoes;
     	return false;
     }
     while (auxPointer!= NULL)//while pra ir até o final da lista encadeada
@@ -441,8 +473,10 @@ bool getEncadeamento(node *hash, string content, int pos) {
 
         if (auxPointer->c == content)//if caso ache o nodo com o conteudo que quero
         {
-        	cout<< " "<< pos;
-        	cout<< " "<<colisoes;
+            saidaArquivo(pos + " ");
+            saidaArquivo(colisoes + " ");
+        	//cout<< " "<< pos;
+        	//cout<< " "<<colisoes;
             return true;
         }
         colisoes++;
@@ -450,8 +484,10 @@ bool getEncadeamento(node *hash, string content, int pos) {
 
     }
 
-    cout<< " "<< pos;
-    cout<< " "<<colisoes;
+    saidaArquivo(pos + " ");
+    saidaArquivo(colisoes + " ");
+    //cout<< " "<< pos;
+    //cout<< " "<<colisoes;
     return false;
 }
 
@@ -466,8 +502,10 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
     	auxPointer->prox = auxPointer->prox->prox;
     	free(toBeDeleted);
 
-    	cout<< " "<< pos;
-    	cout<< " "<<colisoes;
+        saidaArquivo(pos + " ");
+        saidaArquivo(colisoes + " ");
+    	//cout<< " "<< pos;
+    	//cout<< " "<<colisoes;
     	return true;
     }
     while (auxPointer==NULL)//while pra ir até o final da lista encadeada
@@ -482,21 +520,25 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
     		auxPointer->prox = auxPointer->prox->prox;
     		free(toBeDeleted);
 
-    		cout<< " "<< pos;
-    		cout<< " "<<colisoes;
+    		saidaArquivo(pos + " ");
+    		saidaArquivo(colisoes + " ");
+    		//cout<< " "<< pos;
+    		//cout<< " "<<colisoes;
             return true;
         }
         auxPointer = auxPointer->prox;
 
     }
-    cout<< " "<< pos;
-    cout<< " "<<colisoes;
+    saidaArquivo(pos + " ");
+    saidaArquivo(colisoes + " ");
+    //cout<< " "<< pos;
+    //cout<< " "<<colisoes;
     return false;
 }
 
 bool insertLinear(node *hash, string content, int key, int tam) {
     //cout << "Insere Linear";
-    
+
     int pos;
 
     for (int i = 0; i < tam; i++)
@@ -506,12 +548,16 @@ bool insertLinear(node *hash, string content, int key, int tam) {
         {
             hash[pos].c = content;
             hash[pos].deleted=false;
-            cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+            saidaArquivo(i + " ");
+            //cout<< " "<<pos <<" "<< i;
             return true;
         }
         else if(hash[pos].c == content)
         {
-        	cout<< " "<<pos <<" "<< i;
+        	saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
         	return false;
         }
 
@@ -528,12 +574,16 @@ bool getLinear(node *hash, string content, int key, int tam)
     	pos=hash1(key + i, tam);
         if(hash[pos].c == content)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
         	return true;
         }
         else if (hash[pos].c.empty() && hash[pos].deleted==false)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
             return false;
         }
     }
@@ -552,15 +602,19 @@ bool deleteLinear(node *hash, string content, int key, int tam)
         {
             hash[pos].c.clear();
             hash[pos].deleted=true;
-            cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+            //cout<< " "<<pos <<" "<< i;
         	return true;
         }
         else if (hash[pos].c.empty() && hash[pos].deleted==false)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
             return false;
         }
-    
+
     }
 
 }
@@ -576,12 +630,16 @@ bool insertQuadratica(node *hash, string content, int key, int tam) {
         {
             hash[pos].c = content;
             hash[pos].deleted = false;
-            cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+            //cout<< " "<<pos <<" "<< i;
             return true;
         }
         else if(hash[pos].c == content)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
             return false;
         }
     }
@@ -597,12 +655,16 @@ bool getQuadratica(node *hash, string content, int key, int tam){
         pos=hash1(key + i + i*i, tam);
         if(hash[pos].c == content)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
             return true;
         }
         else if (hash[pos].c.empty() && hash[pos].deleted==false)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
             return false;
         }
     }
@@ -619,15 +681,19 @@ bool deleteQuadratica(node *hash, string content, int key, int tam){
         {
             hash[pos].c.clear();
             hash[pos].deleted=true;
-            cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+            //cout<< " "<<pos <<" "<< i;
             return true;
         }
         else if (hash[pos].c.empty() && hash[pos].deleted==false)
         {
-        	cout<< " "<<pos <<" "<< i;
+            saidaArquivo(pos + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<pos <<" "<< i;
             return false;
         }
-    
+
     }
 }
 
@@ -642,11 +708,15 @@ bool insertHashDuplo(node *hash, string content, int key, int tam) {
         if(hash[aux].c.empty()){
             hash[aux].c = content;
             hash[aux].deleted=false;
-            cout<< " "<<aux <<" "<< i;
+            saidaArquivo(aux + " ");
+        	saidaArquivo(i + " ");
+            //cout<< " "<<aux <<" "<< i;
             return true;
         }
         else if(hash[aux].c == content){
-        	cout<< " "<<aux <<" "<< i;
+        	saidaArquivo(aux + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<aux <<" "<< i;
             return false;
         }
     }
@@ -663,12 +733,16 @@ bool deleteHashDuplo(node *hash, string content, int key, int tam)
         if(hash[aux].c == content){
             hash[aux].c.clear();
             hash[aux].deleted=true;
-            cout<< " "<<aux <<" "<< i;
+           saidaArquivo(aux + " ");
+        	saidaArquivo(i + " ");
+            //cout<< " "<<aux <<" "<< i;
             return true;
         }
         else if (hash[aux].c.empty() && (hash[aux].deleted==false))
         {
-        	cout<< " "<<aux <<" "<< i;
+            saidaArquivo(aux + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<aux <<" "<< i;
             return false;
         }
     }
@@ -684,12 +758,16 @@ bool getHashDuplo(node *hash, string content, int key, int tam)
         aux = hash1((h1 + i * h2), tam);
         if (hash[aux].c == content)
         {
-        	cout<< " "<<aux <<" "<< i;
+            saidaArquivo(aux + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<aux <<" "<< i;
             return true;
         }
         else if (hash[aux].c.empty() && (hash[aux].deleted==false))
         {
-        	cout<< " "<<aux <<" "<< i;
+            saidaArquivo(aux + " ");
+        	saidaArquivo(i + " ");
+        	//cout<< " "<<aux <<" "<< i;
             return false;
         }
     }
@@ -739,13 +817,41 @@ string checkString(string content)
   	  	cout<<"ERROR"<<endl;
     	cin>>content;
         return "eita";
-	} 	
-	
+	}
+
 	return content;
 }
 
+bool CriaArquivo(){
+    FILE *arq;
+
+    arq = fopen("SaidaHashTable.txt", "w");  //
+    if (arq == NULL) // Erro ao abrir o arquivo
+        return false;
+    else
+        return true;
+
+    }
+
+bool saidaArquivo(string c){
+    FILE *arq;
+    int result;
+
+    arq = fopen("SaidaHashTable.txt", "r+");  //
+    if (arq == NULL) // Erro ao abrir o arquivo
+    {
+        return false;
+    }
+    result = fprinf(arq, c);
+    fclose(arq);
+    if (result == EOF) //Se a função NÃO for executada com sucesso, fputs retorna a constante EOF.
+        return false;
+    else
+        return true;
+    }
+
 /*void splitString(std::string entrada, std::string &tag, std::string &content) {
-    
+
     std::string delims = "\"";
     std::string results[2];
     size_t lastOffset = 0;
@@ -761,7 +867,7 @@ string checkString(string content)
         else
             lastOffset = offset + 1; // add one to skip the delimiter
     }
-    
+
     tag = results[0];
     content = results[1];
 }*/
