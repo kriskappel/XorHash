@@ -125,15 +125,13 @@ int main(int argc, char **argv) {
 
             qtd++; //adiciona mais um na quantidade
 
+            cout<<endl;
             fator = (double) qtd / tam; //calcula o fator de carga
             if (fator >= 0.75)
             {
                 //flag = 1; //ocorre o rehash //karine aqui para que essa flag?
                 hashTable=ReHash(hashTable, content, colisao, &tam);
                 qtd=0;
-            }else
-            {
-                cout<<endl;
             }
 
         } else if (tag == "DELETE") {
@@ -397,7 +395,7 @@ node *ReHash(node *hash, string content, int colisao, int *tam)
                 //insertToHash(newHash, hash[i].c, colisao, *tam);
                 //cout<<"teste";
                 linkeList= (hash + i);
-                cout<<linkeList->c;
+                //cout<<linkeList->c;
                 while(linkeList!=NULL)
                 {
                     //teste++;
