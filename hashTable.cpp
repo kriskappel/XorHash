@@ -9,6 +9,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -20,6 +21,10 @@ struct n {
 typedef struct n node;
 
 int totalColisao=0;
+
+int linkedInsertion = 0, linkedDeletion = 0, linkedGet = 0, linearInsertion = 0, linearDeletion = 0, linearGet = 0;
+int quadraticInsertion = 0, quadraticDeletion = 0, quadraticGet = 0, doubleInsertion = 0, doubleDeletion = 0, doubleGet = 0;
+
 
 node *createHash(int tam);//Cria hash inicial
 bool insertToHash(node *hash, string content, int colisao, int tam);//Insere na hash
@@ -56,6 +61,7 @@ string checkString(string content);
 int main(int argc, char **argv) {
     int tam = 500, qtd = 0; //tamanho incial da hash = 500
     int colisao, flag = 0;
+    int inicio, fim;
     bool status;
     double fator;
     node *hashTable = createHash(tam);
@@ -110,11 +116,31 @@ int main(int argc, char **argv) {
         if (tag == "INSERT") {
             cout << "INSERT " << content << " ";//só pra fins de teste
             //saidaArquivo("INSERT \""+content+"\" ");
+            inicio = 0;
+            inicio = clock(); //inicia o clock
 
             content.erase(content.begin());
 			content.erase(content.end()-1);
 
             status = insertToHash(hashTable, content, colisao, tam);//chama a funcao de inserção
+
+            fim = 0;
+            fim = clock();
+
+            switch(colisao){
+                case 0:
+                    linkedInsertion += (fim-inicio);
+                    break;
+                case 1:
+                    linearInsertion += (fim-inicio);
+                    break;
+                case 2:
+                    quadraticInsertion += (fim-inicio);
+                    break;
+                case 3:
+                    doubleInsertion += (fim-inicio);
+                    break;
+            }
 
             if (status)
                 //saidaArquivo("SUCCESS\n");
@@ -139,11 +165,31 @@ int main(int argc, char **argv) {
         } else if (tag == "DELETE") {
             cout << "DELETE " << content<< " ";
             //saidaArquivo("DELETE \""+content+"\" ");
+            inicio = 0;
+            inicio = clock(); //inicia o clock
 
             content.erase(content.begin());
 			content.erase(content.end()-1);
 
             status=removeFromHash(hashTable, content, colisao, tam);
+
+            fim = 0;
+            fim = clock();
+
+            switch(colisao){
+                case 0:
+                    linkedDeletion += (fim-inicio);
+                    break;
+                case 1:
+                    linearDeletion += (fim-inicio);
+                    break;
+                case 2:
+                    quadraticDeletion += (fim-inicio);
+                    break;
+                case 3:
+                    doubleDeletion+= (fim-inicio);
+                    break;
+            }
 
             if (status)
                 //saidaArquivo("SUCCESS\n");
@@ -156,11 +202,31 @@ int main(int argc, char **argv) {
         } else if (tag == "GET") {
             cout << "GET " << content << " ";
             //saidaArquivo("GET \""+content+"\" ");
+            inicio = 0;
+            inicio = clock(); //inicia o clock
 
             content.erase(content.begin());
 			content.erase(content.end()-1);
 
             status=getFromHash(hashTable, content, colisao, tam);
+            fim = 0;
+            fim = clock();
+
+            switch(colisao){
+                case 0:
+                    linkedGet += (fim-inicio);
+                    break;
+                case 1:
+                    linearGet += (fim-inicio);
+                    break;
+                case 2:
+                    quadraticGet += (fim-inicio);
+                    break;
+                case 3:
+                    doubleGet += (fim-inicio);
+                    break;
+            }
+
 
             if (status)
                 //saidaArquivo("SUCCESS\n");
@@ -185,6 +251,20 @@ int main(int argc, char **argv) {
     //node *nNode;
     //insertToHash(teste);
     //cout<<"string"<<endl;
+
+    printf("Tempo encadeamento; INSERT: %dms\n", linkedInsertion);
+    printf("Tempo encadeamento; GET: %dms\n", linkedGet);
+    printf("Tempo encadeamento; DELETE: %dms\n", linkedDeletion);
+    printf("Tempo linear; INSERT: %dms\n", linearInsertion);
+    printf("Tempo linear; GET: %dms\n", linearGet);
+    printf("Tempo linear; DELETE: %dms\n", linearDeletion);
+    printf("Tempo quadratico; INSERT: %dms\n", quadraticInsertion);
+    printf("Tempo quadratico; GET: %dms\n", quadraticGet);
+    printf("Tempo quadratico; DELETE: %dms\n", quadraticDeletion);
+    printf("Tempo hash duplo; INSERT: %dms\n", doubleInsertion);
+    printf("Tempo hash duplo; GET: %dms\n", doubleGet);
+    printf("Tempo hash duplo; DELETE: %dms\n", doubleDeletion);
+
     return 0;
 
 }
