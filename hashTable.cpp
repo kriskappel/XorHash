@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
             else
                 //saidaArquivo("FAIL\n");
                 cout << " FAIL";
-
+            cout<<endl;
             qtd++; //adiciona mais um na quantidade
 
             fator = (double) qtd / tam; //calcula o fator de carga
@@ -157,9 +157,6 @@ int main(int argc, char **argv) {
                 //flag = 1; //ocorre o rehash //karine aqui para que essa flag?
                 hashTable=ReHash(hashTable, colisao, &tam);
                 qtd=0;
-            }else
-            {
-                cout<<endl;
             }
 
         } else if (tag == "DELETE") {
@@ -458,7 +455,7 @@ node *ReHash(node *hash, int colisao, int *tam)
     //string transferedContent;
     if(colisao > 0)
     {
-    	cout<<endl;
+    	//cout<<endl;
         //cout<<"colisao mais q 0"<<endl;
         for(int i=0; i< (*tam)/2; i++)
         {
@@ -496,6 +493,7 @@ node *ReHash(node *hash, int colisao, int *tam)
             }
         }
     }
+    //free(hash);
     //cout<<teste;
     return newHash;
 }
@@ -514,7 +512,7 @@ int stringXor(string content) {
 
 bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
     //cout << "Insere Encadeado";
-    int colisoes=0;
+    int colisoes=1;
 
     node *auxPointer = (hash + pos);
     while (auxPointer->prox != NULL)//while pra ir até o final da lista encadeada
@@ -526,13 +524,14 @@ bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
             //saidaArquivo(colisoes + " ");
             if(!rehash)
             {
+            	colisoes=1;
         		cout<< " "<< pos;
         		cout<< " "<<colisoes;
             	totalColisao=totalColisao+colisoes;
             }
             return false; //se ja achar o elemento na tabela retorna falso
         }
-        colisoes++;
+        //colisoes++;
         auxPointer = auxPointer->prox;
     }
     if (auxPointer->c == content)
@@ -548,7 +547,7 @@ bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
         return false;
     }
 
-    colisoes++;
+    //colisoes++;
     //no while ele ja foi até o final da lista, agora ele só adiciona na lista encadeada
     node *newNode = new node;
     newNode->c = content;
@@ -559,17 +558,18 @@ bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
     //saidaArquivo(colisoes + " ");
     if(!rehash)
     {
+    	//colisoes=1;
     	cout<< " "<< pos;
     	cout<< " "<< colisoes;
     //cout<<endl;
-    	totalColisao=totalColisao+colisoes;
+    	//totalColisao=totalColisao+colisoes;
     }
     return true;
 }
 
 bool getEncadeamento(node *hash, string content, int pos) {
     node *auxPointer = (hash + pos);
-    int colisoes=0;
+    int colisoes=1;
 
     if(auxPointer->prox==NULL)
     {
@@ -593,7 +593,7 @@ bool getEncadeamento(node *hash, string content, int pos) {
             totalColisao=totalColisao+colisoes;
             return true;
         }
-        colisoes++;
+        //colisoes++;
         auxPointer = auxPointer->prox;
 
     }
@@ -608,7 +608,7 @@ bool getEncadeamento(node *hash, string content, int pos) {
 
 bool deleteEncadeamento(node *hash, string content, int pos) {
     node *auxPointer = (hash + pos);
-    int colisoes=0;
+    int colisoes=1;
     if(auxPointer->c == content) //Se a primeira posição é a ser deletada ele só atualiza o valor e deleta o prox
     {
     	node *toBeDeleted =auxPointer->prox;
@@ -841,19 +841,33 @@ bool deleteQuadratica(node *hash, string content, int key, int tam){
 
 bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) {
     //cout << "Insere Hash Duplo";
-    int aux=0, h1, h2;
+    int aux=0, h1, h2, i, firstValue=-1;
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
 
-    for (int i = 1; i < tam; ++i) {
+    for (i = 0; i < tam; ++i) {
         aux = hash1((h1 + i*h2), tam);
+        if(aux==firstValue)
+        {
+        	totalColisao=totalColisao+i;
+        	cout<< " "<< i;
+        	return false;
+        }
+        if(i==0)
+        {
+        	firstValue= hash1((h1 + i*h2), tam);
+        }
+        //out<<endl;
+        //cout<<"aux"<<aux<<endl;
         if(hash[aux].c.empty()){
             hash[aux].c = content;
             hash[aux].deleted=false;
             //saidaArquivo(aux + " ");
         	//saidaArquivo(i + " ");
+        	//cout<<"teste1"<<endl;
         	if(!rehash)
             {
+            	//cout<<"teste2"<<endl;
 	            cout<< " "<<aux <<" "<< i;
 	            totalColisao=totalColisao+i;
 	        }
@@ -862,14 +876,17 @@ bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) 
         else if(hash[aux].c == content){
         	//saidaArquivo(aux + " ");
         	//saidaArquivo(i + " ");
+        	//cout<<"teste1"<<endl;
         	if(!rehash)
             {
+            	//cout<<"teste2"<<endl;
 	        	cout<< " "<<aux <<" "<< i;
 	            totalColisao=totalColisao+i;
 	        }
             return false;
         }
     }
+    
 }
 
 bool deleteHashDuplo(node *hash, string content, int key, int tam)
@@ -878,7 +895,7 @@ bool deleteHashDuplo(node *hash, string content, int key, int tam)
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
 
-    for (int i = 1; i < tam; ++i) {
+    for (int i = 0; i < tam; ++i) {
         aux = hash1((h1 + i*h2), tam);
         if(hash[aux].c == content){
             hash[aux].c.clear();
@@ -906,7 +923,7 @@ bool getHashDuplo(node *hash, string content, int key, int tam)
     int aux=0, h1, h2;
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
-    for (int i = 1; i < tam; ++i) {
+    for (int i = 0; i < tam; ++i) {
         aux = hash1((h1 + i * h2), tam);
         if (hash[aux].c == content)
         {
