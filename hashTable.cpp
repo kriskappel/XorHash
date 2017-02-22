@@ -1,7 +1,7 @@
 //REMINDER:
 
 /*
-
+tirar o qtd=0 depois rehash
 */
 
 #include <stdio.h>
@@ -278,7 +278,7 @@ node *createHash(int tam) {
 bool insertToHash(node *hash, string content, int colisao, int tam, bool rehash) {
     //cout << "\n===INSERCAO===\n" << "Conteudo: " << content << endl;
     //cout<<content<<endl;
-    cout<<tam<<endl;
+    //cout<<tam<<endl;
     int key, pos;
     //cout<<"content da hash->"<<(hash+pos)->c<<endl;
     //node *newNode;
