@@ -15,7 +15,7 @@ using namespace std;
 
 struct n {
     string c;
-    struct n *prox;
+    struct n *prox = NULL;
     bool deleted = false;
 };
 typedef struct n node;
@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
             {
                 //flag = 1; //ocorre o rehash //karine aqui para que essa flag?
                 hashTable=ReHash(hashTable, colisao, &tam);
-                qtd=0;
+                //qtd=0;
             }
 
         } else if (tag == "DELETE") {
@@ -417,6 +417,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
         cout<< " "<<pos<< " 0";
         (hash + pos)->c.clear();
         (hash + pos)->deleted=true;
+
         return true;
     } else {
         bool deletedFlag;
@@ -443,7 +444,7 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
             }
         }
         //cout<<"Status: Erro na remocao"<<endl;
-        return false;
+        //return false;
     }
 }
 
@@ -636,8 +637,9 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
             //node *anterior = auxPointer->prox->prox;
             //if(auxPointer->prox)
             node *toBeDeleted =auxPointer->prox;
-
+            
             auxPointer->prox = auxPointer->prox->prox;
+
             free(toBeDeleted);
 
             //saidaArquivo(pos + " ");
@@ -652,6 +654,7 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
         auxPointer = auxPointer->prox;
 
     }
+   
     //saidaArquivo(pos + " ");
     //saidaArquivo(colisoes + " ");
     colisoes++;
