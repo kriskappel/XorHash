@@ -73,8 +73,7 @@ int main(int argc, char **argv) {
     //out<<argc;
 
     //cout<<*argv[1];
-    bool CriaArquivo();
-    if (argc == 1 || argc > 2) {
+     if (argc == 1 || argc > 2) {
         cout << "\nPlease select just a valid colision treatment :D\n\n-help for more options and explanations.\n";
         return 0;
     }
@@ -155,7 +154,7 @@ int main(int argc, char **argv) {
             fator = (double) qtd / tam; //calcula o fator de carga
             if (fator >= 0.75)
             {
-                //flag = 1; //ocorre o rehash //karine aqui para que essa flag?
+                //flag = 1; //ocorre o rehash
                 hashTable=ReHash(hashTable, colisao, &tam);
                 qtd=0;
             }
@@ -519,7 +518,7 @@ bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
     node *auxPointer = (hash + pos);
     while (auxPointer->prox != NULL)//while pra ir até o final da lista encadeada
     {
-    	
+
         if (auxPointer->c == content)
         {
             //saidaArquivo(pos + " ");
@@ -896,7 +895,7 @@ bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) 
             return false;
         }
     }
-    
+
 }
 
 bool deleteHashDuplo(node *hash, string content, int key, int tam)
@@ -1003,7 +1002,7 @@ string checkString(string content)
 	return content;
 }
 
-bool CriaArquivo(){
+/*bool CriaArquivo(){
     FILE *arq;
 
     arq = fopen("SaidaHashTable.txt", "w");  //
@@ -1013,7 +1012,7 @@ bool CriaArquivo(){
         return true;
 
     }
-
+*/
 bool saidaArquivo(string c){
     /*FILE *arq;
     int result;
