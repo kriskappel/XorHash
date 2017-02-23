@@ -953,7 +953,7 @@ bool deleteHashDuplo(node *hash, string content, int key, int tam)
         if(aux==firstValue)
         {
             totalColisao=totalColisao+i;
-            cout<< " "<<aux" "<< i;
+            cout<< " "<<aux<<" "<< i;
             return false;
 
         }
