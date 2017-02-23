@@ -408,6 +408,9 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     pos = hash1(key, tam); //faz a função k mod m
     //saidaArquivo(pos + " ");
     cout<<" "<<pos;
+
+    if(content=="di")
+    cout<<endl<<"teste "<<(hash+pos)->prox<<endl;
     //cout << "Posicao: " << pos << "\nKey: " << key << endl;
 
     //se
@@ -417,9 +420,18 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
         cout<< " "<<pos<< " 0";
         (hash + pos)->c.clear();
         (hash + pos)->deleted=true;
+        if(content=="di")
+            cout<<endl<<"teste2 "<<(hash+pos)->prox<<endl;        
 
         return true;
-    } else {
+    } else if((hash + pos)->prox==NULL) 
+    {
+        if(content=="di")
+            cout<<endl<<"teste3 "<<(hash+pos)->prox<<endl;
+        cout<< " "<<pos<< " 0";
+        return false;
+    }
+    else {
         bool deletedFlag;
         switch (colisao) {
             case 0: {
@@ -565,7 +577,7 @@ bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
         cout<< " "<< pos;
         cout<< " "<< colisoes;
     //cout<<endl;
-        //totalColisao=totalColisao+colisoes;
+        totalColisao=totalColisao+colisoes;
     }
     return true;
 }
@@ -591,6 +603,7 @@ bool getEncadeamento(node *hash, string content, int pos) {
         {
             //saidaArquivo(pos + " ");
             //saidaArquivo(colisoes + " ");
+            //colisoes++;
             cout<< " "<< pos;
             cout<< " "<<colisoes;
             totalColisao=totalColisao+colisoes;
@@ -612,6 +625,7 @@ bool getEncadeamento(node *hash, string content, int pos) {
 bool deleteEncadeamento(node *hash, string content, int pos) {
     node *auxPointer = (hash + pos);
     int colisoes=0;
+
     if(auxPointer->c == content) //Se a primeira posição é a ser deletada ele só atualiza o valor e deleta o prox
     {
         node *toBeDeleted =auxPointer->prox;
@@ -625,11 +639,11 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
         //colisoes++;
         cout<< " "<< pos;
         cout<< " "<<colisoes;
-        colisoes++;
-        totalColisao=totalColisao+colisoes;
+        //colisoes++;
+        //totalColisao=totalColisao+colisoes;
         return true;
     }
-    while (auxPointer==NULL)//while pra ir até o final da lista encadeada
+    while (auxPointer->prox!=NULL)//while pra ir até o final da lista encadeada
     {
         if (auxPointer->prox->c == content)//if caso ache o nodo com o conteudo que quero
         {
@@ -644,17 +658,17 @@ bool deleteEncadeamento(node *hash, string content, int pos) {
 
             //saidaArquivo(pos + " ");
             //saidaArquivo(colisoes + " ");
-            //colisoes++;
+            colisoes++;
             cout<< " "<< pos;
             cout<< " "<<colisoes;
-            colisoes++;
+            
             totalColisao=totalColisao+colisoes;
             return true;
         }
         auxPointer = auxPointer->prox;
 
     }
-   
+
     //saidaArquivo(pos + " ");
     //saidaArquivo(colisoes + " ");
     colisoes++;
@@ -904,12 +918,22 @@ bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) 
 
 bool deleteHashDuplo(node *hash, string content, int key, int tam)
 {
-    int aux=0, h1, h2;
+    int aux=0, h1, h2, firstValue=-1;
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
 
     for (int i = 0; i < tam; ++i) {
         aux = hash1((h1 + i*h2), tam);
+        if(aux==firstValue)
+        {
+            totalColisao=totalColisao+i;
+            cout<< " "<< i;
+            return false;
+        }
+        if(i==0)
+        {
+            firstValue= hash1((h1 + i*h2), tam);
+        }
         if(hash[aux].c == content){
             hash[aux].c.clear();
             hash[aux].deleted=true;
@@ -933,11 +957,21 @@ bool deleteHashDuplo(node *hash, string content, int key, int tam)
 
 bool getHashDuplo(node *hash, string content, int key, int tam)
 {
-    int aux=0, h1, h2;
+    int aux=0, h1, h2, firstValue=-1;
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
     for (int i = 0; i < tam; ++i) {
         aux = hash1((h1 + i * h2), tam);
+        if(aux==firstValue)
+        {
+            totalColisao=totalColisao+i;
+            cout<< " "<< i;
+            return false;
+        }
+        if(i==0)
+        {
+            firstValue= hash1((h1 + i*h2), tam);
+        }
         if (hash[aux].c == content)
         {
             //saidaArquivo(aux + " ");
