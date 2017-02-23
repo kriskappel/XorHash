@@ -143,13 +143,17 @@ int main(int argc, char **argv) {
             }
 
             if (status)
+            {
                 //saidaArquivo("SUCCESS\n");
                 cout << " SUCCESS";
+                qtd++;
+            }
             else
                 //saidaArquivo("FAIL\n");
                 cout << " FAIL";
             cout<<endl;
-            qtd++; //adiciona mais um na quantidade
+             //adiciona mais um na quantidade
+            //cout<<"qtd: "<<qtd<<endl;
 
             //cout<<endl;
             fator = (double) qtd / tam; //calcula o fator de carga
@@ -277,6 +281,8 @@ node *createHash(int tam) {
 
 bool insertToHash(node *hash, string content, int colisao, int tam, bool rehash) {
     //cout << "\n===INSERCAO===\n" << "Conteudo: " << content << endl;
+    //cout<<tam<<endl;
+
     //cout<<content<<endl;
     //cout<<tam<<endl;
     int key, pos;
@@ -299,7 +305,10 @@ bool insertToHash(node *hash, string content, int colisao, int tam, bool rehash)
     //cout<<"POSICOES "<<(hash+pos)->c<<" "<<auxNode<<endl;
     //sem colisão, insere normal da hash
     //out << "Posicao: " << pos << "\nKey: " << key << endl;
-
+    /*if(pos==401)
+    {
+    	cout<<endl<<"teste"<<endl;
+    }*/
     //caso a hash esteja vazia ele só poe na posição e abraços
     if (hash[pos].c.empty())
     {
@@ -409,9 +418,9 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
     //saidaArquivo(pos + " ");
     cout<<" "<<pos;
 
-    if(content=="di")
+    /*if(content=="di")
     cout<<endl<<"teste "<<(hash+pos)->prox<<endl;
-    //cout << "Posicao: " << pos << "\nKey: " << key << endl;
+    //cout << "Posicao: " << pos << "\nKey: " << key << endl;*/
 
     //se
     if ((hash + pos)->c == content && (hash + pos)->prox==NULL) {
@@ -420,14 +429,15 @@ bool removeFromHash(node *hash, string content, int colisao, int tam) {
         cout<< " "<<pos<< " 0";
         (hash + pos)->c.clear();
         (hash + pos)->deleted=true;
-        if(content=="di")
-            cout<<endl<<"teste2 "<<(hash+pos)->prox<<endl;        
+        /*if(content=="di")
+            cout<<endl<<"teste2 "<<(hash+pos)->prox<<endl;  */      
 
         return true;
-    } else if((hash + pos)->prox==NULL) 
+    } else if((hash + pos)->prox==NULL && colisao == 0) 
     {
-        if(content=="di")
-            cout<<endl<<"teste3 "<<(hash+pos)->prox<<endl;
+        /*if(content=="di")
+            cout<<endl<<"teste3 "<<(hash+pos)->prox<<endl;*/
+    	//cout<<endl<<"casoRemovefromhash"<<endl;
         cout<< " "<<pos<< " 0";
         return false;
     }
@@ -465,17 +475,19 @@ node *ReHash(node *hash, int colisao, int *tam)
     *tam=2 * (*tam);
     node *newHash=createHash(*tam);
     node *linkeList=new node();
-    //int teste=0;
+    int teste=0;
+    int i;
 
     //string transferedContent;
     if(colisao > 0)
     {
         //cout<<endl;
         //cout<<"colisao mais q 0"<<endl;
-        for(int i=0; i< (*tam)/2; i++)
+        for(i=0; i< (*tam)/2; i++)
         {
             if(!hash[i].c.empty())
             {
+            	//teste++;
                 //saidaArquivo("INSERT " + content + " ");
                 //cout << "INSERT " << hash[i].c << " ";
                 //cout<<hash[i].c;
@@ -483,6 +495,8 @@ node *ReHash(node *hash, int colisao, int *tam)
                 //cout<<endl;
             }
         }
+        //cout<<"teste: "<<teste<<endl;
+        //cout<<i<<endl;
     }
     else
     {
@@ -874,10 +888,14 @@ bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) 
     for (i = 0; i <= tam; ++i) {
 
         aux = hash1((h1 + i*h2), tam);
-        if (content=="jo")
+        /*if(aux==401)
+    {
+    	cout<<endl<<"teste"<<endl;
+    }*/
+        /*if (content=="jo")
         {
             cout<<endl<<"teste "<<h2<<" "<<i<<" "<<h1<<endl;
-        }
+        }*/
         if(aux==firstValue)
         {
             totalColisao=totalColisao+i;
@@ -930,13 +948,14 @@ bool deleteHashDuplo(node *hash, string content, int key, int tam)
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
 
-    for (int i = 1; i <= tam; ++i) {
+    for (int i = 0; i <= tam; ++i) {
         aux = hash1((h1 + i*h2), tam);
         if(aux==firstValue)
         {
             totalColisao=totalColisao+i;
-            cout<< " "<< i;
+            cout<< " "<<aux" "<< i;
             return false;
+
         }
         if(i==0)
         {
@@ -968,12 +987,12 @@ bool getHashDuplo(node *hash, string content, int key, int tam)
     int aux=0, h1, h2, firstValue=-1;
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
-    for (int i = 1; i <= tam; ++i) {
+    for (int i = 0; i <= tam; ++i) {
         aux = hash1((h1 + i * h2), tam);
         if(aux==firstValue)
         {
             totalColisao=totalColisao+i;
-            cout<< " "<< i;
+            cout<<" "<<aux<<" "<< i;
             return false;
         }
         if(i==0)
