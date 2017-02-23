@@ -564,11 +564,10 @@ bool insertEncadeamento(node *hash, string content, int pos, bool rehash) {
 
     //colisoes++;
     //no while ele ja foi até o final da lista, agora ele só adiciona na lista encadeada
-    node *newNode = new node;
+    node *newNode = new node();
     newNode->c = content;
     newNode->prox = NULL;
     auxPointer->prox = newNode;
-
     //saidaArquivo(pos + " ");
     //saidaArquivo(colisoes + " ");
     if(!rehash)
@@ -872,8 +871,13 @@ bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) 
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
 
-    for (i = 0; i < tam; ++i) {
+    for (i = 0; i <= tam; ++i) {
+
         aux = hash1((h1 + i*h2), tam);
+        if (content=="jo")
+        {
+            cout<<endl<<"teste "<<h2<<" "<<i<<" "<<h1<<endl;
+        }
         if(aux==firstValue)
         {
             totalColisao=totalColisao+i;
@@ -887,6 +891,10 @@ bool insertHashDuplo(node *hash, string content, int key, int tam, bool rehash) 
         //out<<endl;
         //cout<<"aux"<<aux<<endl;
         if(hash[aux].c.empty()){
+         /*   if (content=="jo")
+        {
+            cout<<endl<<"teste "<<aux<<" "<<hash[aux].c<<"teste"<<endl;
+        }*/
             hash[aux].c = content;
             hash[aux].deleted=false;
             //saidaArquivo(aux + " ");
@@ -922,7 +930,7 @@ bool deleteHashDuplo(node *hash, string content, int key, int tam)
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
 
-    for (int i = 0; i < tam; ++i) {
+    for (int i = 1; i <= tam; ++i) {
         aux = hash1((h1 + i*h2), tam);
         if(aux==firstValue)
         {
@@ -960,7 +968,7 @@ bool getHashDuplo(node *hash, string content, int key, int tam)
     int aux=0, h1, h2, firstValue=-1;
     h1 = hash1(key, tam);
     h2 = hash2(key, tam);
-    for (int i = 0; i < tam; ++i) {
+    for (int i = 1; i <= tam; ++i) {
         aux = hash1((h1 + i * h2), tam);
         if(aux==firstValue)
         {
